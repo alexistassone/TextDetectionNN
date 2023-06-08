@@ -8,7 +8,7 @@ from keras.utils.np_utils import to_categorical
 
 import pickle
 
-# Settings
+# Parameters
 path = 'myData'
 pathLabels = 'labels.csv'
 testRatio = 0.2
@@ -37,7 +37,7 @@ for x in range(0, numOfClasses):
         currImg = cv2.resize(currImg, (imageDimensions[0], imageDimensions[1]))
         images.append(currImg)
         classNum.append(x)
-    print(x, end = " ")
+    print(x, end=" ")
 print(" ")
 print("Total Images in Images List:", len(images))
 print("Total IDs in classNum List:", len(classNum))
@@ -57,8 +57,8 @@ print(X_validation.shape)
 
 numOfSamples = []
 for x in range(0, numOfClasses):
-    #print(len(np.where(y_train==x)[0]))
-    numOfSamples.append(len(np.where(y_train==x)[0]))
+    # print(len(np.where(y_train==x)[0]))
+    numOfSamples.append(len(np.where(y_train == x)[0]))
 print(numOfSamples)
 
 plt.figure(figsize=(10, 5))
@@ -69,11 +69,14 @@ plt.ylabel("Num of Images")
 # plt.show()
 
 # Pre-process images
+
+
 def preProcessing(img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = cv2.equalizeHist(img)
     img = img/255
     return img
+
 
 # img = preProcessing(X_train[30])
 # img = cv2.resize(img, (300, 300))
@@ -98,7 +101,9 @@ y_train = to_categorical(y_train, numOfClasses)
 y_test = to_categorical(y_test, numOfClasses)
 y_validation = to_categorical(y_validation, numOfClasses)
 
-#Create model
+# Create model
+
+
 def myModel():
     numOfFilters = 60
     sizeOfFilter1 = (5, 5)
@@ -122,6 +127,7 @@ def myModel():
     model.add(Dense(numOfClasses, activation='softmax'))
     model.compile(Adam(lr=0.001), loss='categorical crossentropy', metrics=['accuracy'])
     return model
+
 
 model = myModel()
 print(model.summary())
