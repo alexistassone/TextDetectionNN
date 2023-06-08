@@ -54,3 +54,5 @@ plt.title("Num of Images for Each Class")
 plt.xlabel("Class ID")
 plt.ylabel("Num of Images")
 plt.show()
+
+
