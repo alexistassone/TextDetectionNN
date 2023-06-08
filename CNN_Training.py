@@ -6,12 +6,18 @@ import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.np_utils import to_categorical
 
+import pickle
+
 # Settings
 path = 'myData'
 pathLabels = 'labels.csv'
 testRatio = 0.2
 validationRatio = 0.2
 imageDimensions = (32, 32, 3)
+
+batchSizeVal = 50
+epochsVal = 10
+stepsPerEpochVal = 2000
 
 # Get list of directories in our path
 count = 0
@@ -121,3 +127,27 @@ model = myModel()
 print(model.summary())
 
 # Run training
+history = model.fit_generator(dataGen.flow(X_train, y_train, batch_size=batchSizeVal), steps_per_epoch=stepsPerEpochVal,
+                              epochs=epochsVal, validation_data=(X_validation, y_validation), shuffle=1)
+
+plt.figure(1)
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.legend(['training', 'validation'])
+plt.title('Loss')
+plt.xlabel('epoch')
+plt.figure(2)
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.legend(['training', 'validation'])
+plt.title('Accuracy')
+plt.xlabel('epoch')
+plt.show()
+score = model.evaluate(X_test, y_test, verbose=0)
+print('Test Score:', score[0])
+print('Test Accuracy:', score[1])
+
+# Store model in directory
+pickle_out = open("model_trained.p", "wb")
+pickle.dump(model, pickle_out)
+pickle_out.close()
